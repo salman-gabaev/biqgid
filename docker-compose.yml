@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  nginx:
+    build: ./docker/nginx/
+    container_name: biqgid-backend-service
+    ports:
+    - 80:80
+    depends_on:
+      - php-fpm
+    volumes:
+      - ./:/app/biqgid
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/logs/nginx-access.log:/var/log/nginx/access.log
+      - ./docker/nginx/logs/nginx-error.log:/var/log/nginx/error.log
+  php-fpm:
+    build: ./docker/php-fpm/
+    container_name: biqgid-backend-php-fpm-service
+    ports:
+    - 9000:9000
+    volumes:
+    - ./:/app/biqgid
+  php-cli:
+    build: ./docker/php-cli/
+    container_name: biqgid-backend-php-cli-service
+    volumes:
+      - ./:/app/biqgid
+    tty: true
